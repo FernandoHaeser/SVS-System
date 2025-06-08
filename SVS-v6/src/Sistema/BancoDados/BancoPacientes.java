@@ -20,6 +20,15 @@ public class BancoPacientes {
         return null;
     }
 
+    public static Paciente buscarPorCpf(String cpf) {
+
+        for (Paciente p : pacientes) {
+            if (p.getCpf().equals(cpf);
+            return p;
+        }
+
+    }
+
     public static ArrayList<Paciente> getPacientes() {
         return pacientes;
     }
