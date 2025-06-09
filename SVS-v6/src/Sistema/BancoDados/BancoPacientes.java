@@ -2,6 +2,9 @@ package Sistema.BancoDados;
 
 import java.util.ArrayList;
 import Sistema.Models.Paciente;
+import Sistema.UI.RegistrarVacina;
+
+import javax.swing.*;
 
 public class BancoPacientes {
 	
@@ -22,11 +25,19 @@ public class BancoPacientes {
 
     public static Paciente buscarPorCpf(String cpf) {
 
+        boolean loginSucesso = true;
+
         for (Paciente p : pacientes) {
-            if (p.getCpf().equals(cpf);
+            if (p.getCpf().equals(cpf));
             return p;
         }
 
+        if (!loginSucesso) {
+            JOptionPane.showMessageDialog(null, "CPF inválido!");
+            RegistrarVacina.registroVacina();
+        }
+
+        return null;
     }
 
     public static ArrayList<Paciente> getPacientes() {

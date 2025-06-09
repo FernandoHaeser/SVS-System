@@ -20,14 +20,14 @@ public class Operador extends Usuario{
         this.idFuncionario = idFuncionario;
     }
 
-    public void RegistrarVacina() {
+    public static void RegistrarVacina() {
         String cpfPaciente = JOptionPane.showInputDialog("Digite o CPF do paciente:");
 
         Paciente paciente = BancoPacientes.buscarPorCpf(cpfPaciente);
 
         if (paciente != null) {
             String vacina = JOptionPane.showInputDialog("Digite o nome da vacina:");
-            paciente.adicionarVacina(vacina); // supondo que tenha esse método
+            Paciente.adicionarVacina(vacina); // supondo que tenha esse método
 
             JOptionPane.showMessageDialog(null, "Vacina registrada com sucesso para " + paciente.getPrimeiroNome());
         } else {

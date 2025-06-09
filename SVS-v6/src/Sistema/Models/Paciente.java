@@ -6,4 +6,10 @@ public class Paciente extends Usuario {
         super(primeiroNome, ultimoNome, cpf, senha);
     }
 
+    public static void adicionarVacina(Vacina vacina) {
+            vacinas.add(vacina);
+            System.out.println("Vacina adicionada: " + vacina);
+        }
+
+    }
 }
