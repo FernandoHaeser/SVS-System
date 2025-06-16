@@ -6,14 +6,12 @@ public class Vacina {
 
     private String nomeVacina;
     private String marcaVacina;
-    private Date dataAplicacao;
-    private String descVacina;
+    private String dataAplicacao;
 
-    public Vacina (String nomeVacina, String marcaVacina, Date dataAplicacao, String descVacina) {
+    public Vacina (String nomeVacina, String marcaVacina, String dataAplicacao, String descVacina) {
         this.nomeVacina = nomeVacina;
         this.marcaVacina = marcaVacina;
         this.dataAplicacao = dataAplicacao;
-        this.descVacina = descVacina;
     }
 
     public String getNomeVacina() {
@@ -32,21 +30,20 @@ public class Vacina {
         this.marcaVacina = marcaVacina;
     }
 
-    public Date getDataAplicacao() {
+    public String getDataAplicacao() {
         return dataAplicacao;
     }
 
-    public void setDataAplicacao(Date dataAplicacao) {
+    public void setDataAplicacao(String dataAplicacao) {
         this.dataAplicacao = dataAplicacao;
     }
 
-    public String getDescVacina() {
-        return descVacina;
+    @Override
+    public String toString() {
+        return "Vacina{" +
+                "nomeVacina='" + nomeVacina + '\'' +
+                ", marcaVacina='" + marcaVacina + '\'' +
+                ", dataAplicacao=" + dataAplicacao +
+                '}';
     }
-
-    public void setDescVacina(String descVacina) {
-        this.descVacina = descVacina;
-    }
-
-
 }

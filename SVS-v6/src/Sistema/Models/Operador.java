@@ -1,9 +1,10 @@
 package Sistema.Models;
 
 import javax.swing.*;
+
 import Sistema.BancoDados.BancoPacientes;
 
-public class Operador extends Usuario{
+public class Operador extends Usuario {
 
     private String idFuncionario;
 
@@ -26,15 +27,16 @@ public class Operador extends Usuario{
         Paciente paciente = BancoPacientes.buscarPorCpf(cpfPaciente);
 
         if (paciente != null) {
-            String vacina = JOptionPane.showInputDialog("Digite o nome da vacina:");
-            Paciente.adicionarVacina(vacina); // supondo que tenha esse método
+            JOptionPane.showMessageDialog(null, "Paciente encontrado! Você está registrando" +
+                    "uma vacina no paciente: " + paciente.getPrimeiroNome() + " " + paciente.getUltimoNome());
+            Paciente.adicionarVacina(); // supondo que tenha esse método
 
-            JOptionPane.showMessageDialog(null, "Vacina registrada com sucesso para " + paciente.getPrimeiroNome());
+            JOptionPane.showMessageDialog(null,
+                    "Vacina registrada com sucesso para " + paciente.getPrimeiroNome());
         } else {
             JOptionPane.showMessageDialog(null, "Paciente não encontrado!");
         }
     }
-
 
     @Override
     public String toString() {
