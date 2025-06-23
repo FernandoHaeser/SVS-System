@@ -16,7 +16,6 @@ public class MenuInicial {
 
         boolean continuar = true;
 
-
         while (continuar) {
             escolha = JOptionPane.showOptionDialog(null, "O que você deseja fazer?",
                     "Menu Inicial", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, opcoes, opcoes[0]);

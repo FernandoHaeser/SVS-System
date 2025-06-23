@@ -44,8 +44,6 @@ public abstract class Usuario implements Autenticavel {
         }
     }
 
-    // Implementação da interface Autenticavel
-    @Override
     public void setSenha(String senha) {
         this.senha = senha;
     }
@@ -54,8 +52,9 @@ public abstract class Usuario implements Autenticavel {
         return senha;
     }
 
+    // Implementação da interface Autenticavel
     public boolean autenticar(String senha) {
-        return this.senha != null && this.senha.equals(senha);
+        return this.senha.equals(senha);
     }
 
     // Método abstrato

@@ -1,7 +1,5 @@
 package Sistema.Models;
 
-import Sistema.Interfaces.Autenticavel;
-
 public class Operador extends Usuario {
 
     private String idFuncionario;

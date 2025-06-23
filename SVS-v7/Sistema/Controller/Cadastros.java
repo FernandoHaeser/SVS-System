@@ -1,30 +1,33 @@
 package Sistema.Controller;
+// Pacote controlador do sistema, onde ficam as classes que controlam a lógica de cadastro, login, etc.
 
 import javax.swing.*;
-
+// Importa a biblioteca Swing para interface gráfica (JOptionPane, JPanel, JTextField, etc.)
 import Sistema.Models.*;
+// Importa todas as classes do pacote Models (Paciente, Operador...)
 import Sistema.BancoDados.*;
+// Importa classes responsáveis pelo banco de dados (listas) dos operadores e pacientes
 import Sistema.View.Cadastro;
+// Importa a view de cadastro para navegar entre telas
 import Sistema.View.Login;
+// Importa a view de login para navegar para tela de login
 
 public class Cadastros {
 
     public void cadastroUsuario() {
+        // Método que abre um formulário para cadastrar um paciente/usuário
 
-        /*
-         * BancoOperadores bancoOperadores = new BancoOperadores();
-         * BancoPacientes bancoPacientes = new BancoPacientes();]
-         */
-
-        Login loginMenu = new Login();
-        boolean cadastrado = false;
+        Login loginMenu = new Login(); // Instancia a tela de login
+        boolean cadastrado = false; // Flag para controlar o loop do cadastro
 
         while (!cadastrado) {
+            // Campos do formulário
             JTextField nomeField = new JTextField();
             JTextField sobrenomeField = new JTextField();
             JTextField cpfField = new JTextField();
             JPasswordField senhaField = new JPasswordField();
 
+            // Painel do formulário
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
             panel.add(new JLabel("Nome:"));
@@ -36,43 +39,60 @@ public class Cadastros {
             panel.add(new JLabel("Senha:"));
             panel.add(senhaField);
 
+            // Exibe o formulário
             int result = JOptionPane.showConfirmDialog(null, panel, "Cadastro de Usuário", JOptionPane.OK_CANCEL_OPTION);
 
             if (result == JOptionPane.OK_OPTION) {
+                // Pega os dados digitados
                 String nome = nomeField.getText().trim();
                 String sobrenome = sobrenomeField.getText().trim();
                 String cpf = cpfField.getText().trim();
                 String senha = new String(senhaField.getPassword());
 
+                // Validação simples
                 if (nome.isEmpty() || sobrenome.isEmpty() || cpf.isEmpty() || senha.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
-                    continue; // volta pro começo do loop
+                    continue; // Volta pro começo do loop
                 }
 
+                // Validação: CPF já existe?
+                boolean cpfExiste = BancoPacientes.getPacientes().stream()
+                        .anyMatch(p -> p.getCpf().equals(cpf));
+                if (cpfExiste) {
+                    JOptionPane.showMessageDialog(null, "Já existe um usuário com esse CPF!");
+                    continue;
+                }
+
+                // Cria o objeto Paciente com os dados preenchidos
                 Paciente paciente = new Paciente(nome, sobrenome, cpf, senha);
+
+                // Adiciona no banco
                 BancoPacientes.adicionarPaciente(paciente);
+
+                // Mensagem de sucesso e redirecionamento pro login
                 JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
                 cadastrado = true;
                 loginMenu.logar();
+
             } else {
-                Cadastro menuCadastrar = new Cadastro();
-                menuCadastrar.cadastrar();
+                // Se o usuário cancelar, volta para o menu de cadastro
+                new Cadastro().cadastrar();
                 break;
             }
         }
     }
 
-
     public void cadastroOperador() {
+        // Método que abre formulário para cadastrar um operador
 
-        Operador operador = new Operador(null, null, null, null, null);
-
+        // Campos do formulário
         JTextField nomeField = new JTextField();
         JTextField sobrenomeField = new JTextField();
         JTextField cpfField = new JTextField();
         JTextField idFuncionario = new JTextField();
         JPasswordField senhaField = new JPasswordField();
 
+        // Monta painel com os campos
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(new JLabel("Nome:"));
@@ -86,28 +106,37 @@ public class Cadastros {
         panel.add(new JLabel("Senha:"));
         panel.add(senhaField);
 
+        // Exibe o formulário
         int result = JOptionPane.showConfirmDialog(null, panel, "Cadastro de Operador", JOptionPane.OK_CANCEL_OPTION);
 
-        operador.setPrimeiroNome(nomeField.getText());
-        operador.setUltimoNome(sobrenomeField.getText());
-        operador.setCpf(cpfField.getText());
-        operador.setIdFuncionario(idFuncionario.getText());
-        String senha = new String(senhaField.getPassword());
-        operador.setSenha(senha);
+        if (result == JOptionPane.OK_OPTION) {
+            // Recupera os valores preenchidos
+            String nome = nomeField.getText().trim();
+            String sobrenome = sobrenomeField.getText().trim();
+            String cpf = cpfField.getText().trim();
+            String idFunc = idFuncionario.getText().trim();
+            String senha = new String(senhaField.getPassword());
 
-        if (nomeField.getText().isEmpty() || cpfField.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
-            return;
-        } else if (result == JOptionPane.OK_OPTION) {
+            // Validação simples
+            if (nome.isEmpty() || sobrenome.isEmpty() || cpf.isEmpty() || idFunc.isEmpty() || senha.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
+                return;
+            }
+
+            // Cria o operador com os dados já preenchidos
+            Operador operador = new Operador(nome, sobrenome, cpf, senha, idFunc);
+
+            // Adiciona no banco
             BancoOperadores.adicionarOperador(operador);
-            JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
-            JOptionPane.showMessageDialog(null, "Clique em " + "OK" + " para ser direcionado ao login");
 
-            Login login = new Login();
-            login.logar();
+            // Mensagem de sucesso e redirecionamento para login
+            JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!");
+            JOptionPane.showMessageDialog(null, "Clique em OK para ser direcionado ao login");
+
+            new Login().logar();
         } else {
-            Cadastro menuLogin = new Cadastro();
-            menuLogin.cadastrar();
+            // Se cancelar, volta pro menu de cadastro
+            new Cadastro().cadastrar();
         }
     }
 }
