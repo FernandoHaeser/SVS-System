@@ -19,7 +19,7 @@ public class MenuInicial {
         String[] opcoes = {"Logar", "Cadastrar-se", "Sair"};
 
         // Opções de confirmação para sair do sistema
-        String[] opcoes2 = {"Continuar", "Voltar"};
+        String[] opcoes2 = {"Sim", "Não"};
 
         // Instância dos menus de Login e Cadastro para redirecionamento
         Login menuLogin = new Login();
