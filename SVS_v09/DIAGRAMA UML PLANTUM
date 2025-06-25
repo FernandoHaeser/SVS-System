@@ -1,0 +1,107 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+' ========== INTERFACES ==========
+interface Autenticavel {
+  +autenticar(cpf: String, senha: String): boolean
+}
+
+interface RegistradorVacina {
+  +registrarVacina(paciente: Paciente, vacina: Vacina, data: String): void
+}
+
+' ========== CLASSE ABSTRATA ==========
+abstract class Usuario {
+  -nome: String
+  -idade: int
+  -cpf: String
+  -senha: String
+  --
+  +Usuario(nome: String, idade: int, cpf: String, senha: String)
+  +getNome(): String
+  +getIdade(): int
+  +getCpf(): String
+  +getSenha(): String
+  +setSenha(senha: String): void
+}
+
+' ========== CLASSES CONCRETAS ==========
+class Paciente {
+  -agenda: AgendaVacinal
+  -notificacoes: List<Notificacao>
+  --
+  +verVacinasAplicadas(): void
+  +verAgenda(): void
+}
+
+class Operador {
+  --
+  +aplicarVacina(): void
+}
+
+class Vacina {
+  -nomeVacina: String
+  -marcaVacina: String
+  -descricaoVacina: String
+  --
+  +getInfo(): String
+}
+
+class AplicacaoVacina {
+  -dataDeAplicacao: String
+  -paciente: Paciente
+  -vacina: Vacina
+  -operador: Operador
+  --
+  +getResumo(): String
+}
+
+class AgendaVacinal {
+  -vacinasAgendadas: List<Vacina>
+  -datas: List<String>
+  --
+  +agendarVacina(vacina: Vacina, data: String): void
+  +listarAgendadas(): void
+}
+
+class SistemaVacinacao {
++usuarios: List<Usuario>
+-vacinas: List<Vacina>
+-aplicacoes: List<AplicacaoVacina>
+--
++login(cpf: String, senha: String): Usuario
++registrarAplicacao(): void
++listarUsuarios(): void
+}
+
+class Notificacao {
+  -mensagem: String
+  -dataEnvio: String
+  --
+  +enviarNotificacao(usuario: Usuario): void
+}
+
+' ========== HERANÇAS E IMPLEMENTAÇÕES ==========
+Usuario <|-- Paciente
+Usuario <|-- Operador
+
+Usuario ..|> Autenticavel
+Operador ..|> RegistradorVacina
+
+' ========== RELACIONAMENTOS ==========
+Paciente "1" --> "0..*" AplicacaoVacina : toma
+Operador "1" --> "0..*" AplicacaoVacina : registra
+Vacina "1" --> "0..*" AplicacaoVacina : é aplicada
+
+Paciente --> AgendaVacinal
+Paciente --> "*" Notificacao
+
+SistemaVacinacao --> "*" Usuario
+SistemaVacinacao --> "*" Vacina
+SistemaVacinacao --> "*" AplicacaoVacina
+
+AplicacaoVacina --> Vacina
+AplicacaoVacina --> Paciente
+AplicacaoVacina --> Operador
+
+@enduml
