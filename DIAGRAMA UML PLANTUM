@@ -1,107 +1,159 @@
-@startuml
-skinparam classAttributeIconSize 0
-
-' ========== INTERFACES ==========
+' ================= Interfaces =================
 interface Autenticavel {
-  +autenticar(cpf: String, senha: String): boolean
+  + setSenha(senha: String): void
 }
 
-interface RegistradorVacina {
-  +registrarVacina(paciente: Paciente, vacina: Vacina, data: String): void
+interface Logavel {
+  + registrarLog(): void
 }
 
-' ========== CLASSE ABSTRATA ==========
+' ================= Classe Abstrata =================
 abstract class Usuario {
-  -nome: String
-  -idade: int
-  -cpf: String
-  -senha: String
-  --
-  +Usuario(nome: String, idade: int, cpf: String, senha: String)
-  +getNome(): String
-  +getIdade(): int
-  +getCpf(): String
-  +getSenha(): String
-  +setSenha(senha: String): void
+  - primeiroNome: String
+  - ultimoNome: String
+  - cpf: String
+  - senha: String
+  + Usuario(primeiroNome: String, ultimoNome: String, cpf: String)
+  + getPrimeiroNome(): String
+  + getUltimoNome(): String
+  + getCpf(): String
+  + setSenha(senha: String): void
+  + getSenha(): String
+  + mostrarInfos(): String
 }
 
-' ========== CLASSES CONCRETAS ==========
-class Paciente {
-  -agenda: AgendaVacinal
-  -notificacoes: List<Notificacao>
-  --
-  +verVacinasAplicadas(): void
-  +verAgenda(): void
-}
-
+' ================= Modelos =================
 class Operador {
-  --
-  +aplicarVacina(): void
+  - idFuncionario: String
+  + Operador(primeiroNome: String, ultimoNome: String, cpf: String, senha: String, idFuncionario: String)
+  + getIdFuncionario(): String
+  + getSenha(): String
+  + setSenha(senha: String): void
+  + mostrarInfos(): String
+  + registrarLog(): void
+}
+
+class Paciente {
+  - vacinas: List<Vacina>
+  + Paciente(primeiroNome: String, ultimoNome: String, cpf: String, senha: String)
+  + setSenha(senha: String): void
+  + getSenha(): String
+  + adicionarVacina(vacina: Vacina): void
+  + exibirHistoricoVacinas(): String
+  + mostrarInfos(): String
+  + registrarLog(): void
 }
 
 class Vacina {
-  -nomeVacina: String
-  -marcaVacina: String
-  -descricaoVacina: String
-  --
-  +getInfo(): String
+  - nomeVacina: String
+  - marcaVacina: String
+  - dataAplicacao: String
+  + Vacina(nomeVacina: String, marcaVacina: String, dataAplicacao: String)
+  + toString(): String
 }
 
-class AplicacaoVacina {
-  -dataDeAplicacao: String
-  -paciente: Paciente
-  -vacina: Vacina
-  -operador: Operador
-  --
-  +getResumo(): String
+Paciente "1" o-- "0..*" Vacina
+
+' ================= Banco de Dados =================
+class BancoOperadores {
+  - operadores: List<Operador>
+  + adicionarOperador(operador: Operador): void
+  + getOperadores(): List<Operador>
 }
+BancoOperadores "1" o-- "*" Operador
 
-class AgendaVacinal {
-  -vacinasAgendadas: List<Vacina>
-  -datas: List<String>
-  --
-  +agendarVacina(vacina: Vacina, data: String): void
-  +listarAgendadas(): void
+class BancoPacientes {
+  - pacientes: List<Paciente>
+  + adicionarPaciente(paciente: Paciente): void
+  + buscarPorCpf(cpf: String): Paciente
+  + getPacientes(): List<Paciente>
+  + removerPaciente(paciente: Paciente): void
 }
+BancoPacientes "1" o-- "*" Paciente
 
-class SistemaVacinacao {
-+usuarios: List<Usuario>
--vacinas: List<Vacina>
--aplicacoes: List<AplicacaoVacina>
---
-+login(cpf: String, senha: String): Usuario
-+registrarAplicacao(): void
-+listarUsuarios(): void
+' ================= Controladores =================
+class Cadastros {
+  + cadastroUsuario(): void
+  + cadastroOperador(): void
 }
+Cadastros ..> BancoPacientes
+Cadastros ..> BancoOperadores
+Cadastros ..> Login
+Cadastros ..> Cadastro
 
-class Notificacao {
-  -mensagem: String
-  -dataEnvio: String
-  --
-  +enviarNotificacao(usuario: Usuario): void
+class Logins {
+  - menuUsuario: MenuUsuario
+  - menuOperador: MenuOperador
+  - menu: Login
+  + loginPaciente(): void
+  + loginOperador(): void
 }
+Logins ..> BancoPacientes
+Logins ..> BancoOperadores
+Logins ..> MenuUsuario
+Logins ..> MenuOperador
+Logins ..> Login
+Logins ..> Paciente
+Logins ..> Operador
 
-' ========== HERANÇAS E IMPLEMENTAÇÕES ==========
-Usuario <|-- Paciente
-Usuario <|-- Operador
+class RegistrarVacina {
+  + registrarVacina(operador: Operador): void
+}
+RegistrarVacina ..> BancoPacientes
+RegistrarVacina ..> MenuOperador
+RegistrarVacina ..> Paciente
+RegistrarVacina ..> Vacina
+RegistrarVacina ..> Operador
 
+class DeletarPaciente {
+  + deletarPaciente(operador: Operador): void
+}
+DeletarPaciente ..> BancoPacientes
+DeletarPaciente ..> MenuOperador
+DeletarPaciente ..> Operador
+DeletarPaciente ..> Paciente
+
+class EditarPaciente {
+  + editarPaciente(operador: Operador): void
+}
+EditarPaciente ..> BancoPacientes
+EditarPaciente ..> MenuOperador
+EditarPaciente ..> Operador
+EditarPaciente ..> Paciente
+
+' ================= Views =================
+class Cadastro {
+  + cadastrar(): void
+}
+Cadastro ..> Cadastros
+Cadastro ..> MenuInicial
+
+class Login {
+  + logar(): void
+}
+Login ..> Logins
+Login ..> MenuInicial
+
+class MenuInicial {
+  + telaInicial(): void
+}
+MenuInicial ..> Login
+MenuInicial ..> Cadastro
+
+class MenuOperador {
+  + menuOperador(operador: Operador): void
+}
+MenuOperador ..> RegistrarVacina
+MenuOperador ..> MenuInicial
+
+class MenuUsuario {
+  + menuUsuario(paciente: Paciente): void
+}
+MenuUsuario ..> MenuInicial
+
+' ================= Relações =================
 Usuario ..|> Autenticavel
-Operador ..|> RegistradorVacina
-
-' ========== RELACIONAMENTOS ==========
-Paciente "1" --> "0..*" AplicacaoVacina : toma
-Operador "1" --> "0..*" AplicacaoVacina : registra
-Vacina "1" --> "0..*" AplicacaoVacina : é aplicada
-
-Paciente --> AgendaVacinal
-Paciente --> "*" Notificacao
-
-SistemaVacinacao --> "*" Usuario
-SistemaVacinacao --> "*" Vacina
-SistemaVacinacao --> "*" AplicacaoVacina
-
-AplicacaoVacina --> Vacina
-AplicacaoVacina --> Paciente
-AplicacaoVacina --> Operador
-
-@enduml
+Operador --|> Usuario
+Paciente --|> Usuario
+Operador ..|> Logavel
+Paciente ..|> Logavel
