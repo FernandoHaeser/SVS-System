@@ -80,6 +80,30 @@ public class Paciente extends Usuario implements Logavel {
      * @return Texto formatado com o histórico ou uma mensagem informando que está vazio
      */
 
+
+
+/*
+ * O que é StringBuilder?
+ * -----------------------
+ * - StringBuilder é uma classe usada para montar (construir) strings de forma mais eficiente do que
+ *   fazer várias concatenações com o operador '+'.
+ *
+ * Por que usar StringBuilder?
+ * ----------------------------
+ * - Em Java, strings são imutáveis. Toda vez que você usa '+' para concatenar,
+ *   uma nova string é criada na memória.
+ * - Com StringBuilder, a string é montada em um espaço de memória só, o que economiza recursos
+ *   e melhora a performance, especialmente em loops.
+ *
+ * O que faz o .append()?
+ * -----------------------
+ * - O método .append() adiciona conteúdo (texto, variáveis, objetos etc) ao final da string atual
+ *   no StringBuilder.
+ * - Ele pode ser encadeado, como: builder.append("texto").append(outraCoisa);
+ */
+
+
+    
     public String exibirHistoricoVacinas() {
         if (vacinas.isEmpty()) {
             return "Nenhuma vacina registrada.";
